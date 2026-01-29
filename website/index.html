@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Luda Borovikova - AI Product Manager specializing in innovative AI solutions and product strategy">
+    <title>Luda Borovikova - AI Product Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">Luda Borovikova</a>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="portfolio.html">Portfolio</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero fade-in">
+            <div class="hero-content">
+                <h1>Luda Borovikova</h1>
+                <p class="subtitle">AI Product Manager | Innovation Strategist</p>
+                <p>Transforming visionary AI concepts into market-leading products that empower users and drive business growth</p>
+            </div>
+        </section>
+
+        <!-- Introduction Section -->
+        <section class="content-section fade-in">
+            <h2>Welcome</h2>
+            <p>
+                Hello! I'm Luda Borovikova, an AI Product Manager passionate about building intelligent 
+                products that solve real-world problems. With a unique blend of technical expertise and 
+                strategic product vision, I bridge the gap between cutting-edge AI technology and 
+                user-centered design.
+            </p>
+            <p>
+                My mission is to harness the power of artificial intelligence to create products that 
+                are not only technologically advanced but also intuitive, accessible, and impactful. 
+                I believe in the transformative potential of AI when thoughtfully integrated into 
+                products that truly serve user needs.
+            </p>
+        </section>
+
+        <!-- What I Do Section -->
+        <section class="content-section fade-in">
+            <h2>What I Do</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>🤖 AI Product Strategy</h3>
+                    <p>
+                        Developing comprehensive product roadmaps that leverage AI/ML capabilities 
+                        to deliver competitive advantages and exceptional user experiences.
+                    </p>
+                </div>
+                <div class="card">
+                    <h3>🎯 Product Innovation</h3>
+                    <p>
+                        Identifying market opportunities and translating them into innovative 
+                        AI-powered solutions that address real user pain points.
+                    </p>
+                </div>
+                <div class="card">
+                    <h3>👥 Cross-Functional Leadership</h3>
+                    <p>
+                        Leading diverse teams of engineers, designers, and data scientists to 
+                        build and launch successful AI products from concept to market.
+                    </p>
+                </div>
+                <div class="card">
+                    <h3>📊 Data-Driven Decisions</h3>
+                    <p>
+                        Using analytics and user research to inform product decisions and 
+                        continuously improve AI product performance and adoption.
+                    </p>
+                </div>
+                <div class="card">
+                    <h3>🚀 Go-to-Market Strategy</h3>
+                    <p>
+                        Crafting compelling product narratives and launch strategies that 
+                        effectively communicate AI value to diverse stakeholders.
+                    </p>
+                </div>
+                <div class="card">
+                    <h3>🔄 Agile Methodology</h3>
+                    <p>
+                        Implementing iterative development processes that enable rapid 
+                        experimentation and continuous learning in AI product development.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="content-section fade-in" style="text-align: center;">
+            <h2>Let's Build the Future Together</h2>
+            <p>
+                Interested in collaborating on innovative AI products? Let's connect and explore 
+                how we can create transformative solutions that make a difference.
+            </p>
+            <a href="about.html" class="btn">Learn More About Me</a>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 <a href="http://lada-pm.com">lada-pm.com</a> | Luda Borovikova - AI Product Manager</p>
+    </footer>
+
+    <!-- JavaScript for Navigation -->
+    <script>
+        // Hamburger menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking on a link
+        const navLinks = document.querySelectorAll('.nav-menu a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (event) => {
+            const isClickInsideNav = navMenu.contains(event.target) || hamburger.contains(event.target);
+            if (!isClickInsideNav && navMenu.classList.contains('active')) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
