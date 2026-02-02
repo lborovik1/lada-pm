@@ -10,7 +10,11 @@ body {
     line-height: 1.6;
     color: #333;
     min-height: 100vh;
-    background: #f5f5f5;
+    background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
 }
 
 /* Navigation Styles */
@@ -36,6 +40,19 @@ nav {
     font-weight: bold;
     color: white;
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-image {
+    height: 40px;
+    width: auto;
+    border-radius: 3px;
+}
+
+.logo-text {
+    display: inline-block;
 }
 
 .nav-menu {
@@ -125,7 +142,7 @@ nav {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 3rem 2rem;
+    padding: 1.5rem 2rem;
 }
 
 /* Hero Section */
@@ -136,7 +153,7 @@ nav {
     text-align: center;
     color: #333;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     border-top: 3px solid #3498db;
 }
 
@@ -171,7 +188,7 @@ nav {
     background: white;
     border-radius: 5px;
     padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -355,7 +372,7 @@ nav {
     background: white;
     border-radius: 5px;
     padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     border-left: 3px solid #3498db;
 }
