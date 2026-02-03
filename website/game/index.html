@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Learning Game</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Override game styles for proper layout with navigation */
+        body {
+            display: block !important;
+            padding: 0 !important;
+            min-height: 100vh;
+        }
+        
+        .game-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 70px);
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="../index.html" class="logo">
+                <img src="../Logo.jpg" alt="Lada Borovikova Logo" style="height: 50px; vertical-align: middle;">
+            </a>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../about.html">About</a></li>
+                <li><a href="../portfolio.html">Portfolio</a></li>
+                <li><a href="index.html" class="active">AI Game</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="game-wrapper">
+        <div class="container">
+            <header>
+            <h1>Word Learning Game</h1>
+            <div class="controls">
+                <button id="restartBtn" class="restart-btn">🔄 Restart Game</button>
+            </div>
+        </header>
+
+        <div id="fileSelector" class="file-selector">
+            <h2>Select a Word Set</h2>
+            <select id="gameFileSelect" class="file-select">
+                <option value="">-- Choose a game --</option>
+                <option value="games/ai-terms.json">AI Terms & Definitions</option>
+                <option value="games/statistics-terms.json">Statistics Terms & Definitions</option>
+            </select>
+            <button id="startGameBtn" class="start-btn">Start Game</button>
+        </div>
+
+        <div id="gameContainer" class="hidden">
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-label">Level:</span>
+                    <span id="level" class="stat-value">1</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Correct:</span>
+                    <span id="correct" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Incorrect:</span>
+                    <span id="incorrect" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Accuracy:</span>
+                    <span id="accuracy" class="stat-value">0%</span>
+                </div>
+            </div>
+
+            <div id="message" class="message"></div>
+
+            <div class="game-board">
+                <div id="keysColumn" class="column keys-column"></div>
+                <div id="valuesColumn" class="column values-column"></div>
+            </div>
+
+            <div id="gameOver" class="game-over hidden">
+                <h2>🎉 Congratulations!</h2>
+                <p>You've completed all words!</p>
+                <button id="playAgainBtn" class="play-again-btn">Play Again</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        class WordGame {
+            constructor() {
+                this.allWords = {};
+                this.newPool = [];
+                this.correctPool = [];
+                this.incorrectPool = [];
+                this.currentPairs = [];
+                this.selectedKey = null;
+                this.selectedValue = null;
+                this.level = 1;
+                this.correctCount = 0;
+                this.incorrectCount = 0;
+                this.currentFile = null;
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.showFileSelector();
+            }
+
+            showFileSelector() {
+                document.getElementById('fileSelector').classList.remove('hidden');
+                document.getElementById('gameContainer').classList.add('hidden');
+            }
+
+            hideFileSelector() {
+                document.getElementById('fileSelector').classList.add('hidden');
+                document.getElementById('gameContainer').classList.remove('hidden');
+            }
+
+            async loadWords(filePath) {
+                try {
+                    const response = await fetch(filePath);
+                    this.allWords = await response.json();
+                    this.newPool = Object.keys(this.allWords);
+                    this.currentFile = filePath;
+                    console.log(`Loaded ${this.newPool.length} words from ${filePath}`);
+                } catch (error) {
+                    console.error('Error loading words:', error);
+                    this.showMessage('Error loading word file. Please try again.', 'error');
+                }
+            }
+
+            setupEventListeners() {
+                document.getElementById('startGameBtn').addEventListener('click', () => this.startGame());
+                document.getElementById('restartBtn').addEventListener('click', () => this.restart());
+                document.getElementById('playAgainBtn').addEventListener('click', () => this.restart());
+            }
+
+            async startGame() {
+                const fileSelect = document.getElementById('gameFileSelect');
+                const selectedFile = fileSelect.value;
+                
+                if (!selectedFile) {
+                    alert('Please select a word set first!');
+                    return;
+                }
+
+                await this.loadWords(selectedFile);
+                this.hideFileSelector();
+                this.startNewLevel();
+            }
+
+            selectKeysForLevel() {
+                const selected = [];
+                const numToSelect = 4;
+
+                // First, try to get 1 from incorrect pool
+                if (this.incorrectPool.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * this.incorrectPool.length);
+                    selected.push(this.incorrectPool[randomIndex]);
+                }
+
+                // Then fill with new words (up to 3 or whatever is needed)
+                const remaining = numToSelect - selected.length;
+                for (let i = 0; i < remaining && this.newPool.length > 0; i++) {
+                    const randomIndex = Math.floor(Math.random() * this.newPool.length);
+                    selected.push(this.newPool.splice(randomIndex, 1)[0]);
+                }
+
+                // If we still need more (not enough new words), take from incorrect pool
+                while (selected.length < numToSelect && this.incorrectPool.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * this.incorrectPool.length);
+                    const word = this.incorrectPool[randomIndex];
+                    if (!selected.includes(word)) {
+                        selected.push(word);
+                    }
+                }
+
+                return selected;
+            }
+
+            startNewLevel() {
+                // Check if game is over
+                if (this.newPool.length === 0 && this.incorrectPool.length === 0) {
+                    this.showGameOver();
+                    return;
+                }
+
+                const selectedKeys = this.selectKeysForLevel();
+                
+                if (selectedKeys.length === 0) {
+                    this.showGameOver();
+                    return;
+                }
+
+                this.currentPairs = selectedKeys.map(key => ({
+                    key: key,
+                    value: this.allWords[key],
+                    matched: false
+                }));
+
+                this.renderBoard();
+                this.updateStats();
+            }
+
+            renderBoard() {
+                const keysColumn = document.getElementById('keysColumn');
+                const valuesColumn = document.getElementById('valuesColumn');
+
+                keysColumn.innerHTML = '';
+                valuesColumn.innerHTML = '';
+
+                // Get unmatched pairs
+                const unmatchedPairs = this.currentPairs.filter(pair => !pair.matched);
+
+                if (unmatchedPairs.length === 0) {
+                    this.level++;
+                    setTimeout(() => this.startNewLevel(), 500);
+                    return;
+                }
+
+                // Shuffle values
+                const shuffledValues = [...unmatchedPairs].sort(() => Math.random() - 0.5);
+
+                // Render keys
+                unmatchedPairs.forEach(pair => {
+                    const btn = document.createElement('button');
+                    btn.className = 'word-btn key-btn';
+                    btn.textContent = pair.key;
+                    btn.dataset.word = pair.key;
+                    btn.addEventListener('click', () => this.selectKey(pair.key, btn));
+                    keysColumn.appendChild(btn);
+                });
+
+                // Render values
+                shuffledValues.forEach(pair => {
+                    const btn = document.createElement('button');
+                    btn.className = 'word-btn value-btn';
+                    btn.textContent = pair.value;
+                    btn.dataset.word = pair.key; // Store the key for matching
+                    btn.addEventListener('click', () => this.selectValue(pair.key, btn));
+                    valuesColumn.appendChild(btn);
+                });
+            }
+
+            selectKey(key, btn) {
+                // Deselect previous key
+                document.querySelectorAll('.key-btn').forEach(b => b.classList.remove('selected'));
+                
+                this.selectedKey = key;
+                btn.classList.add('selected');
+
+                if (this.selectedValue !== null) {
+                    this.checkMatch();
+                }
+            }
+
+            selectValue(key, btn) {
+                // Deselect previous value
+                document.querySelectorAll('.value-btn').forEach(b => b.classList.remove('selected'));
+                
+                this.selectedValue = key; // This is actually the key that matches this value
+                btn.classList.add('selected');
+
+                if (this.selectedKey !== null) {
+                    this.checkMatch();
+                }
+            }
+
+            checkMatch() {
+                if (this.selectedKey === this.selectedValue) {
+                    // Correct match!
+                    this.correctCount++;
+                    this.handleCorrectMatch();
+                } else {
+                    // Incorrect match
+                    this.incorrectCount++;
+                    this.handleIncorrectMatch();
+                }
+            }
+
+            handleCorrectMatch() {
+                this.showMessage('🎉 Correct!', 'success');
+
+                // Mark pair as matched
+                const pair = this.currentPairs.find(p => p.key === this.selectedKey);
+                if (pair) {
+                    pair.matched = true;
+                }
+
+                // Move to correct pool if it was in incorrect pool
+                const incorrectIndex = this.incorrectPool.indexOf(this.selectedKey);
+                if (incorrectIndex > -1) {
+                    this.incorrectPool.splice(incorrectIndex, 1);
+                }
+                
+                if (!this.correctPool.includes(this.selectedKey)) {
+                    this.correctPool.push(this.selectedKey);
+                }
+
+                // Reset selections
+                this.selectedKey = null;
+                this.selectedValue = null;
+
+                // Re-render board after a short delay
+                setTimeout(() => {
+                    this.renderBoard();
+                    this.updateStats();
+                }, 600);
+            }
+
+            handleIncorrectMatch() {
+                this.showMessage('❌ Try again!', 'error');
+
+                // Add to incorrect pool if not already there
+                if (!this.incorrectPool.includes(this.selectedKey)) {
+                    this.incorrectPool.push(this.selectedKey);
+                }
+
+                // Remove selections after animation
+                setTimeout(() => {
+                    document.querySelectorAll('.word-btn').forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+                    this.selectedKey = null;
+                    this.selectedValue = null;
+                }, 800);
+
+                this.updateStats();
+            }
+
+            showMessage(text, type) {
+                const messageEl = document.getElementById('message');
+                messageEl.textContent = text;
+                messageEl.className = `message ${type}`;
+                messageEl.classList.add('show');
+
+                setTimeout(() => {
+                    messageEl.classList.remove('show');
+                }, 1000);
+            }
+
+            updateStats() {
+                document.getElementById('level').textContent = this.level;
+                document.getElementById('correct').textContent = this.correctCount;
+                document.getElementById('incorrect').textContent = this.incorrectCount;
+                
+                const total = this.correctCount + this.incorrectCount;
+                const accuracy = total > 0 ? Math.round((this.correctCount / total) * 100) : 0;
+                document.getElementById('accuracy').textContent = accuracy + '%';
+            }
+
+            showGameOver() {
+                document.getElementById('gameOver').classList.remove('hidden');
+                document.querySelector('.game-board').style.display = 'none';
+            }
+
+            restart() {
+                this.newPool = [];
+                this.correctPool = [];
+                this.incorrectPool = [];
+                this.currentPairs = [];
+                this.selectedKey = null;
+                this.selectedValue = null;
+                this.level = 1;
+                this.correctCount = 0;
+                this.incorrectCount = 0;
+                this.allWords = {};
+                this.currentFile = null;
+
+                document.getElementById('gameOver').classList.add('hidden');
+                document.querySelector('.game-board').style.display = 'flex';
+                document.getElementById('gameFileSelect').value = '';
+                
+                this.showFileSelector();
+            }
+        }
+
+        // Initialize the game when page loads
+        let game;
+        window.addEventListener('DOMContentLoaded', () => {
+            game = new WordGame();
+        });
+
+        // Navigation menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking on a link
+        const navLinks = document.querySelectorAll('.nav-menu a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (event) => {
+            const isClickInsideNav = navMenu.contains(event.target) || hamburger.contains(event.target);
+            if (!isClickInsideNav && navMenu.classList.contains('active')) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+    </script>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 <a href="http://lada-pm.com">lada-pm.com</a> | Lada Borovikova - AI Product Manager</p>
+    </footer>
+</body>
+</html>
