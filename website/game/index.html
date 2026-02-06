@@ -21,6 +21,62 @@
             min-height: calc(100vh - 70px);
             padding: 20px;
         }
+
+        /* Word button row with speaker icon */
+        .word-btn-row {
+            display: flex;
+            align-items: stretch;
+            gap: 6px;
+        }
+
+        .speak-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            font-size: 1.1em;
+            cursor: pointer;
+            padding: 0 10px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .speak-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .speak-btn.speaking {
+            animation: pulse-speak 0.8s ease-in-out infinite;
+        }
+
+        @keyframes pulse-speak {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .keys-column .speak-btn {
+            background: rgba(0, 0, 0, 0.15);
+        }
+        .keys-column .speak-btn:hover {
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+        .values-column .speak-btn {
+            background: rgba(0, 0, 0, 0.15);
+        }
+        .values-column .speak-btn:hover {
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+        /* Make word buttons grow to fill remaining space */
+        .word-btn-row .word-btn {
+            flex: 1;
+            min-width: 0;
+        }
     </style>
 </head>
 <body>
@@ -28,7 +84,7 @@
     <nav>
         <div class="nav-container">
             <a href="../index.html" class="logo">
-                <img src="../Logo.jpg" alt="Lada Borovikova Logo" style="height: 50px; vertical-align: middle;">
+                <img src="../images/logo.jpg" alt="Lada Borovikova Logo" style="height: 50px; vertical-align: middle;">
             </a>
             <div class="hamburger" id="hamburger">
                 <span></span>
@@ -100,6 +156,30 @@
     </div>
 
     <script>
+        // Text-to-Speech using Web Speech API (works on all modern browsers)
+        function speak(text) {
+            speechSynthesis.cancel(); // Stop any current speech
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9; // Slightly slower for learning
+            
+            // Find the speak button that triggered this and animate it
+            const speakBtns = document.querySelectorAll('.speak-btn');
+            utterance.onstart = () => {
+                speakBtns.forEach(btn => {
+                    if (btn.dataset.text === text) btn.classList.add('speaking');
+                });
+            };
+            utterance.onend = () => {
+                speakBtns.forEach(btn => btn.classList.remove('speaking'));
+            };
+            utterance.onerror = () => {
+                speakBtns.forEach(btn => btn.classList.remove('speaking'));
+            };
+            
+            speechSynthesis.speak(utterance);
+        }
+
         class WordGame {
             constructor() {
                 this.allWords = {};
@@ -238,22 +318,54 @@
 
                 // Render keys
                 unmatchedPairs.forEach(pair => {
+                    const row = document.createElement('div');
+                    row.className = 'word-btn-row';
+
+                    const speakBtn = document.createElement('button');
+                    speakBtn.className = 'speak-btn';
+                    speakBtn.textContent = '🔊';
+                    speakBtn.dataset.text = pair.key;
+                    speakBtn.title = 'Listen';
+                    speakBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        speak(pair.key);
+                    });
+
                     const btn = document.createElement('button');
                     btn.className = 'word-btn key-btn';
                     btn.textContent = pair.key;
                     btn.dataset.word = pair.key;
                     btn.addEventListener('click', () => this.selectKey(pair.key, btn));
-                    keysColumn.appendChild(btn);
+
+                    row.appendChild(speakBtn);
+                    row.appendChild(btn);
+                    keysColumn.appendChild(row);
                 });
 
                 // Render values
                 shuffledValues.forEach(pair => {
+                    const row = document.createElement('div');
+                    row.className = 'word-btn-row';
+
+                    const speakBtn = document.createElement('button');
+                    speakBtn.className = 'speak-btn';
+                    speakBtn.textContent = '🔊';
+                    speakBtn.dataset.text = pair.value;
+                    speakBtn.title = 'Listen';
+                    speakBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        speak(pair.value);
+                    });
+
                     const btn = document.createElement('button');
                     btn.className = 'word-btn value-btn';
                     btn.textContent = pair.value;
                     btn.dataset.word = pair.key; // Store the key for matching
                     btn.addEventListener('click', () => this.selectValue(pair.key, btn));
-                    valuesColumn.appendChild(btn);
+
+                    row.appendChild(speakBtn);
+                    row.appendChild(btn);
+                    valuesColumn.appendChild(row);
                 });
             }
 
