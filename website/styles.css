@@ -86,6 +86,8 @@ nav {
     flex-direction: column;
     cursor: pointer;
     gap: 5px;
+    padding: 8px;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .hamburger span {
@@ -94,6 +96,7 @@ nav {
     background: white;
     border-radius: 3px;
     transition: all 0.3s ease;
+    display: block;
 }
 
 .hamburger.active span:nth-child(1) {
@@ -116,12 +119,30 @@ nav {
 
     .nav-container {
         position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        z-index: 10001;
+        position: relative;
+    }
+
+    .logo img {
+        height: 50px;
+        width: auto;
     }
 
     .hamburger {
         display: flex;
         z-index: 10001;
         position: relative;
+        flex-shrink: 0;
     }
 
     .nav-menu {
