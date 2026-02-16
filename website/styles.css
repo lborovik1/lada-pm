@@ -112,6 +112,7 @@ nav {
 @media (max-width: 768px) {
     nav {
         padding: 0.75rem 1rem;
+        position: relative;
     }
 
     .nav-container {
@@ -120,14 +121,16 @@ nav {
 
     .hamburger {
         display: flex;
-        z-index: 1001;
+        z-index: 1002;
+        position: relative;
     }
 
     .nav-menu {
-        position: absolute;
-        top: calc(100% + 0.75rem);
-        left: -1rem;
-        right: -1rem;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        width: 100%;
         flex-direction: column;
         background: #2c3e50;
         padding: 0;
@@ -136,10 +139,11 @@ nav {
         overflow: hidden;
         transition: max-height 0.3s ease-in-out;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 999;
     }
 
     .nav-menu.active {
-        max-height: 500px;
+        max-height: 400px;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
@@ -150,17 +154,19 @@ nav {
     .nav-menu a {
         display: block;
         width: 100%;
-        padding: 1rem 1.5rem;
+        padding: 1.2rem 1.5rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         text-align: left;
-        font-size: 1rem;
+        font-size: 1.1rem;
+        border-radius: 0;
     }
 
     .nav-menu li:last-child a {
         border-bottom: none;
     }
 
-    .nav-menu a:hover {
+    .nav-menu a:hover,
+    .nav-menu a:active {
         background: rgba(255, 255, 255, 0.15);
     }
 
