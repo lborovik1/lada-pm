@@ -88,6 +88,9 @@ nav {
     gap: 5px;
     padding: 8px;
     -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
 }
 
 .hamburger span {
