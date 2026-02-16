@@ -494,6 +494,40 @@ nav {
     background: #2980b9;
 }
 
+/* Button Group Container */
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.button-group .btn {
+    flex: 1;
+    min-width: 200px;
+    max-width: 280px;
+    text-align: center;
+}
+
+/* Mobile Button Adjustments */
+@media (max-width: 768px) {
+    .button-group {
+        flex-direction: column;
+        gap: 0.75rem;
+        width: 100%;
+    }
+    
+    .button-group .btn {
+        width: 100%;
+        max-width: 100%;
+        min-width: auto;
+        padding: 0.8rem 1.2rem;
+        font-size: 1rem;
+    }
+}
+
 /* Footer */
 footer {
     text-align: center;

@@ -301,55 +301,112 @@ h1 {
 
 @media (max-width: 768px) {
     .container {
-        padding: 20px;
+        padding: 10px;
     }
 
     h1 {
-        font-size: 1.5em;
+        font-size: 1.2em;
     }
 
     header {
         flex-direction: column;
-        gap: 15px;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+
+    .restart-btn {
+        padding: 6px 14px;
+        font-size: 0.85em;
     }
 
     .file-selector {
-        padding: 20px;
+        padding: 15px 10px;
     }
 
     .file-selector h2 {
-        font-size: 1.4em;
+        font-size: 1.2em;
+        margin-bottom: 15px;
     }
 
     .file-select {
-        font-size: 1em;
-        padding: 12px 15px;
+        font-size: 0.9em;
+        padding: 10px 15px;
     }
 
     .start-btn {
-        font-size: 1em;
-        padding: 12px 30px;
-    }
-
-    .game-board {
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .column {
-        max-width: 100%;
+        font-size: 0.95em;
+        padding: 10px 25px;
     }
 
     .stats {
-        padding: 15px;
+        padding: 8px;
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+
+    .stat-item {
+        min-width: 65px;
+    }
+
+    .stat-label {
+        font-size: 0.75em;
     }
 
     .stat-value {
-        font-size: 1.5em;
+        font-size: 1.2em;
+    }
+
+    .message {
+        font-size: 1em;
+        padding: 10px;
+        margin-bottom: 12px;
+    }
+
+    .game-board {
+        gap: 6px;
+        min-height: auto;
+    }
+
+    .column {
+        max-width: 50%;
+        gap: 6px;
+    }
+
+    .word-btn-row {
+        gap: 3px;
+    }
+
+    .speak-btn {
+        font-size: 0.85em;
+        padding: 0 5px;
+        min-width: 30px;
     }
 
     .word-btn {
+        font-size: 0.7em;
+        padding: 10px 8px;
+        height: auto;
+        min-height: 55px;
+        line-height: 1.4;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
+
+    .game-over {
+        padding: 25px 10px;
+    }
+
+    .game-over h2 {
+        font-size: 1.8em;
+    }
+
+    .game-over p {
         font-size: 1em;
-        padding: 15px;
+    }
+
+    .play-again-btn {
+        font-size: 0.95em;
+        padding: 10px 25px;
     }
 }
