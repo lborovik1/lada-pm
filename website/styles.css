@@ -19,7 +19,7 @@ body {
 
 /* Navigation Styles */
 nav {
-    background: #2c3e50;
+    background: #1b3a6b;
     padding: 0.75rem 2rem;
     position: sticky;
     top: 0;
@@ -155,7 +155,7 @@ nav {
         right: 0;
         width: 100%;
         flex-direction: column;
-        background: #2c3e50;
+        background: #1b3a6b;
         padding: 0;
         gap: 0;
         max-height: 0;
@@ -225,7 +225,7 @@ nav {
     font-size: 2rem;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: #2c3e50;
+    color: #1b3a6b;
 }
 
 .hero .subtitle {
@@ -253,7 +253,7 @@ nav {
 }
 
 .content-section h2 {
-    color: #2c3e50;
+    color: #1b3a6b;
     font-size: 1.5rem;
     margin-bottom: 1rem;
     position: relative;
@@ -297,7 +297,7 @@ nav {
 }
 
 .card h3 {
-    color: #2c3e50;
+    color: #1b3a6b;
     margin-bottom: 0.75rem;
     font-size: 1.1rem;
 }
@@ -399,7 +399,7 @@ nav {
 }
 
 .publication-card h3 {
-    color: #2c3e50;
+    color: #1b3a6b;
     font-size: 1.1rem;
     margin: 0;
     line-height: 1.4;
@@ -438,7 +438,7 @@ nav {
 }
 
 .portfolio-item h3 {
-    color: #2c3e50;
+    color: #1b3a6b;
     font-size: 1.3rem;
     margin-bottom: 0.4rem;
 }
@@ -532,7 +532,7 @@ nav {
 footer {
     text-align: center;
     padding: 1.5rem;
-    background: #2c3e50;
+    background: #1b3a6b;
     color: white;
     font-size: 0.85rem;
     margin-top: 2rem;
