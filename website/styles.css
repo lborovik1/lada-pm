@@ -667,14 +667,14 @@ footer a:hover {
     }
 
     .profile-image-compact {
-        width: 150px;
-        height: 150px;
-        margin-bottom: 0.75rem;
+        width: 100px;
+        height: 100px;
+        margin-bottom: 0.6rem;
     }
 
     .profile-name {
-        font-size: 1rem;
-        margin-bottom: 1rem;
+        font-size: 0.95rem;
+        margin-bottom: 0.8rem;
         font-weight: 600;
     }
 
